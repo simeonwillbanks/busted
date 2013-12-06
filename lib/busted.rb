@@ -4,7 +4,6 @@ module Busted
   extend self
 
   def cache?(serial = nil, &blk)
-    raise ArgumentError unless block_given?
     starting = count serial
     yield
     ending = count serial

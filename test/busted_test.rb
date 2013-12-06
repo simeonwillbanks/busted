@@ -14,7 +14,7 @@ class BustedTest < MiniTest::Unit::TestCase
   end
 
   def test_block_required
-    assert_raises ArgumentError do
+    assert_raises LocalJumpError do
       Busted.cache?
     end
   end
