@@ -34,7 +34,7 @@ module Busted
     when :class
       stat[:class_serial]
     else
-      stat[:method_serial] + stat[:constant_serial]
+      stat[:method_serial] + stat[:constant_serial] + stat[:class_serial]
     end
   end
 end
