@@ -18,6 +18,10 @@ module Busted
     cache? :constant, &blk
   end
 
+  def class_cache?(&blk)
+    cache? :class, &blk
+  end
+
   private
 
   def count(serial)
@@ -27,6 +31,8 @@ module Busted
       stat[:method_serial]
     when :constant
       stat[:constant_serial]
+    when :class
+      stat[:class_serial]
     else
       stat[:method_serial] + stat[:constant_serial]
     end

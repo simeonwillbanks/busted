@@ -37,6 +37,10 @@ class BustedTest < MiniTest::Unit::TestCase
     refute Busted.constant_cache? { 1 + 1 }
   end
 
+  def test_class_cache_with_addition
+    refute Busted.class_cache? { 1 + 1 }
+  end
+
   def test_cache_with_new_constant
     assert Busted.cache? { self.class.const_set :"FOO", "foo"  }
   end
@@ -49,6 +53,10 @@ class BustedTest < MiniTest::Unit::TestCase
     assert Busted.constant_cache? { self.class.const_set :"BAZ", "baz"  }
   end
 
+  def test_class_cache_with_new_constant
+    refute Busted.class_cache? { self.class.const_set :"BEER", "beer"  }
+  end
+
   def test_cache_with_new_method
     assert Busted.cache? { Object.class_exec { def foo; end } }
   end
@@ -59,5 +67,25 @@ class BustedTest < MiniTest::Unit::TestCase
 
   def test_constant_cache_with_new_method
     refute Busted.constant_cache? { Object.class_exec { def baz; end } }
+  end
+
+  def test_class_cache_with_new_method
+    refute Busted.class_cache? { Object.class_exec { def beer; end } }
+  end
+
+  def test_cache_with_new_class
+    assert Busted.cache? { Object.class_eval %q{class PierRatPorter; end} }
+  end
+
+  def test_method_cache_with_new_class
+    refute Busted.method_cache? { Object.class_eval %q{class MidnightExpression; end} }
+  end
+
+  def test_constant_cache_with_new_class
+    assert Busted.constant_cache? { Object.class_eval %q{class SantasLittleHelper; end} }
+  end
+
+  def test_class_cache_with_new_class
+    assert Busted.class_cache? { Object.class_eval %q{class TStreetWheat; end} }
   end
 end
