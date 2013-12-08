@@ -21,13 +21,14 @@ module Busted
   private
 
   def count(serial)
+    stat = RubyVM.stat
     case serial
     when :method
-      RubyVM.method_serial
+      stat[:method_serial]
     when :constant
-      RubyVM.constant_serial
+      stat[:constant_serial]
     else
-      RubyVM.method_serial + RubyVM.constant_serial
+      stat[:method_serial] + stat[:constant_serial]
     end
   end
 end
