@@ -19,17 +19,10 @@ class BustedTest < MiniTest::Unit::TestCase
     end
   end
 
-  def test_class_cache_invalidations_requires_block
-    assert_raises LocalJumpError do
-      Busted.class_cache_invalidations
-    end
-  end
-
   def test_cache_invalidations_with_empty_block
     invalidations = Busted.cache_invalidations { }
     assert_equal 0, invalidations[:method]
     assert_equal 0, invalidations[:constant]
-    assert_equal 0, invalidations[:class]
   end
 
   def test_method_cache_invalidations_with_empty_block
@@ -40,15 +33,10 @@ class BustedTest < MiniTest::Unit::TestCase
     assert_equal 0, Busted.constant_cache_invalidations { }
   end
 
-  def test_class_cache_invalidations_with_empty_block
-    assert_equal 0, Busted.class_cache_invalidations { }
-  end
-
   def test_cache_invalidations_with_addition
     invalidations = Busted.cache_invalidations { 1 + 1 }
     assert_equal 0, invalidations[:method]
     assert_equal 0, invalidations[:constant]
-    assert_equal 0, invalidations[:class]
   end
 
   def test_method_cache_invalidations_with_addition
@@ -59,17 +47,12 @@ class BustedTest < MiniTest::Unit::TestCase
     assert_equal 0, Busted.constant_cache_invalidations { 1 + 1 }
   end
 
-  def test_class_cache_invalidations_with_addition
-    assert_equal 0, Busted.class_cache_invalidations { 1 + 1 }
-  end
-
   def test_cache_invalidations_with_new_constant
     invalidations = Busted.cache_invalidations do
       self.class.const_set :"CHEESE", "cheese"
     end
     assert_equal 0, invalidations[:method]
     assert invalidations[:constant] > 0
-    assert_equal 0, invalidations[:class]
   end
 
   def test_method_cache_invalidations_with_new_constant
@@ -86,20 +69,12 @@ class BustedTest < MiniTest::Unit::TestCase
     assert_equal 1, invalidations
   end
 
-  def test_class_cache_invalidations_with_new_constant
-    invalidations = Busted.class_cache_invalidations do
-      self.class.const_set :"SAUSAGE", "sausage"
-    end
-    assert_equal 0, invalidations
-  end
-
   def test_cache_invalidations_with_new_method
     invalidations = Busted.cache_invalidations do
       Object.class_exec { def cheese; end }
     end
     assert invalidations[:method] > 0
     assert_equal 0, invalidations[:constant]
-    assert_equal 0, invalidations[:class]
   end
 
   def test_method_cache_invalidations_with_new_method
@@ -116,20 +91,12 @@ class BustedTest < MiniTest::Unit::TestCase
     assert_equal 0, invalidations
   end
 
-  def test_class_cache_invalidations_with_new_method
-    invalidations = Busted.class_cache_invalidations do
-      Object.class_exec { def sausage; end }
-    end
-    assert_equal 0, invalidations
-  end
-
   def test_cache_invalidations_with_new_class
     invalidations = Busted.cache_invalidations do
       Object.class_eval "class ThreeCheese; end"
     end
     assert_equal 0, invalidations[:method]
     assert_equal 1, invalidations[:constant]
-    assert invalidations[:class] > 0
   end
 
   def test_method_cache_invalidations_with_new_class
@@ -144,13 +111,6 @@ class BustedTest < MiniTest::Unit::TestCase
       Object.class_eval "class Veggie; end"
     end
     assert_equal 1, invalidations
-  end
-
-  def test_class_cache_invalidations_with_new_class
-    invalidations = Busted.class_cache_invalidations do
-      Object.class_eval "class MeatLovers; end"
-    end
-    assert invalidations > 0
   end
 
   def test_cache_predicate_requires_block
@@ -171,12 +131,6 @@ class BustedTest < MiniTest::Unit::TestCase
     end
   end
 
-  def test_class_cache_predicate_requires_block
-    assert_raises LocalJumpError do
-      Busted.class_cache?
-    end
-  end
-
   def test_cache_predicate_with_empty_block
     refute Busted.cache? { }
   end
@@ -187,10 +141,6 @@ class BustedTest < MiniTest::Unit::TestCase
 
   def test_constant_cache_predicate_with_empty_block
     refute Busted.constant_cache? { }
-  end
-
-  def test_class_cache_predicate_with_empty_block
-    refute Busted.class_cache? { }
   end
 
   def test_cache_predicate_with_addition
@@ -205,10 +155,6 @@ class BustedTest < MiniTest::Unit::TestCase
     refute Busted.constant_cache? { 1 + 1 }
   end
 
-  def test_class_cache_predicate_with_addition
-    refute Busted.class_cache? { 1 + 1 }
-  end
-
   def test_cache_predicate_with_new_constant
     assert Busted.cache? { self.class.const_set :"PORTER", "porter" }
   end
@@ -219,10 +165,6 @@ class BustedTest < MiniTest::Unit::TestCase
 
   def test_constant_cache_predicate_with_new_constant
     assert Busted.constant_cache? { self.class.const_set :"STOUT", "stout" }
-  end
-
-  def test_class_cache_predicate_with_new_constant
-    refute Busted.class_cache? { self.class.const_set :"WHEAT", "wheat" }
   end
 
   def test_cache_predicate_with_new_method
@@ -237,10 +179,6 @@ class BustedTest < MiniTest::Unit::TestCase
     refute Busted.constant_cache? { Object.class_exec { def stout; end } }
   end
 
-  def test_class_cache_predicate_with_new_method
-    refute Busted.class_cache? { Object.class_exec { def wheat; end } }
-  end
-
   def test_cache_predicate_with_new_class
     assert Busted.cache? { Object.class_eval "class PierRatPorter; end" }
   end
@@ -251,9 +189,5 @@ class BustedTest < MiniTest::Unit::TestCase
 
   def test_constant_cache_predicate_with_new_class
     assert Busted.constant_cache? { Object.class_eval "class SantasLittleHelper; end" }
-  end
-
-  def test_class_cache_predicate_with_new_class
-    assert Busted.class_cache? { Object.class_eval "class TStreetWheat; end" }
   end
 end

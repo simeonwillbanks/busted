@@ -8,7 +8,7 @@ module Busted
     yield
     ending = counts
 
-    [:method, :constant, :class].each_with_object({}) do |counter, result|
+    [:method, :constant].each_with_object({}) do |counter, result|
       result[counter] = ending[counter] - starting[counter]
     end
   end
@@ -19,10 +19,6 @@ module Busted
 
   def constant_cache_invalidations(&blk)
     cache_invalidations(&blk)[:constant]
-  end
-
-  def class_cache_invalidations(&blk)
-    cache_invalidations(&blk)[:class]
   end
 
   def cache?(counter = nil, &blk)
@@ -42,18 +38,13 @@ module Busted
     cache? :constant, &blk
   end
 
-  def class_cache?(&blk)
-    cache? :class, &blk
-  end
-
   private
 
   def counts
     stat = RubyVM.stat
     {
       method:   stat[:global_method_state],
-      constant: stat[:global_constant_state],
-      class:    stat[:class_serial]
+      constant: stat[:global_constant_state]
     }
   end
 end
