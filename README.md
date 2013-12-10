@@ -1,4 +1,5 @@
 # Busted  [![Build Status](https://travis-ci.org/simeonwillbanks/busted.png?branch=master)](https://travis-ci.org/simeonwillbanks/busted)
+**NOTE:** Build failing because `ruby-head` image last built before `RubyVM.stat` committed.
 
 ***Requires MRI Ruby 2.1.0dev***
 
