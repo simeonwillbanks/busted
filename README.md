@@ -1,4 +1,4 @@
-# Busted
+# Busted  [![Build Status](https://travis-ci.org/simeonwillbanks/busted.png?branch=master)](https://travis-ci.org/simeonwillbanks/busted)
 
 ***Requires MRI Ruby 2.1.0dev***
 
