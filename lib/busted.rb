@@ -3,7 +3,7 @@ require "busted/version"
 module Busted
   extend self
 
-  def cache(&blk)
+  def cache_invalidations(&blk)
     starting = counts
     yield
     ending = counts
@@ -13,23 +13,23 @@ module Busted
     end
   end
 
-  def method_cache(&blk)
-    cache(&blk)[:method]
+  def method_cache_invalidations(&blk)
+    cache_invalidations(&blk)[:method]
   end
 
-  def constant_cache(&blk)
-    cache(&blk)[:constant]
+  def constant_cache_invalidations(&blk)
+    cache_invalidations(&blk)[:constant]
   end
 
-  def class_cache(&blk)
-    cache(&blk)[:class]
+  def class_cache_invalidations(&blk)
+    cache_invalidations(&blk)[:class]
   end
 
   def cache?(serial = nil, &blk)
     total = if serial
-              send :"#{serial}_cache", &blk
+              send :"#{serial}_cache_invalidations", &blk
             else
-              cache(&blk).values.inject :+
+              cache_invalidations(&blk).values.inject :+
             end
     total > 0
   end

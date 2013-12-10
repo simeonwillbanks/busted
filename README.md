@@ -18,8 +18,7 @@ Busted.cache? do
 end
 #=> true
 
-# Full report
-Busted.cache do
+Busted.cache_invalidations do
   class Pizza
   end
 end
@@ -35,8 +34,7 @@ Busted.method_cache? do
 end
 #=> true
 
-# Number of invalidations
-Busted.method_cache do
+Busted.method_cache_invalidations do
   def pizza
   end
 end
@@ -51,8 +49,7 @@ Busted.constant_cache? do
 end
 #=> true
 
-# Number of invalidations
-Busted.constant_cache do
+Busted.constant_cache_invalidations do
   CHEESE = "cheese"
 end
 #=> 1
@@ -67,8 +64,7 @@ Busted.class_cache? do
 end
 #=> true
 
-# Number of invalidations
-Busted.class_cache do
+Busted.class_cache_invalidations do
   class Veggie
   end
 end
@@ -83,8 +79,7 @@ Busted.cache? do
 end
 #=> false
 
-# Full report
-Busted.cache do
+Busted.cache_invalidations do
   pizza = "pizza"
 end
 #=> {:method=>0, :constant=>0, :class=>0}
