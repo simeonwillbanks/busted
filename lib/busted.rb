@@ -8,8 +8,8 @@ module Busted
     yield
     ending = counts
 
-    [:method, :constant, :class].each_with_object({}) do |serial, result|
-      result[serial] = ending[serial] - starting[serial]
+    [:method, :constant, :class].each_with_object({}) do |counter, result|
+      result[counter] = ending[counter] - starting[counter]
     end
   end
 
@@ -25,9 +25,9 @@ module Busted
     cache_invalidations(&blk)[:class]
   end
 
-  def cache?(serial = nil, &blk)
-    total = if serial
-              send :"#{serial}_cache_invalidations", &blk
+  def cache?(counter = nil, &blk)
+    total = if counter
+              send :"#{counter}_cache_invalidations", &blk
             else
               cache_invalidations(&blk).values.inject :+
             end
@@ -51,8 +51,8 @@ module Busted
   def counts
     stat = RubyVM.stat
     {
-      method:   stat[:method_serial],
-      constant: stat[:constant_serial],
+      method:   stat[:global_method_state],
+      constant: stat[:global_constant_state],
       class:    stat[:class_serial]
     }
   end
