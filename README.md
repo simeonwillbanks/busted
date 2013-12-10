@@ -13,39 +13,62 @@ Find code that busts the Ruby cache.
 
 ```ruby
 Busted.cache? do
-  class Pizza
+  class Beer
   end
 end
 #=> true
+
+Busted.cache_invalidations do
+  class Pizza
+  end
+end
+#=> {:method=>0, :constant=>1, :class=>2}
 ```
 
 *Method Cache*
 
 ```ruby
 Busted.method_cache? do
-  def pizza
+  def beer
   end
 end
 #=> true
+
+Busted.method_cache_invalidations do
+  def pizza
+  end
+end
+#=> 3
 ```
 
 *Constant Cache*
 
 ```ruby
 Busted.constant_cache? do
-  PIZZA = "pizza"
+  STOUT = "stout"
 end
 #=> true
+
+Busted.constant_cache_invalidations do
+  CHEESE = "cheese"
+end
+#=> 1
 ```
 
 *Class Cache*
 
 ```ruby
 Busted.class_cache? do
-  class Beer
+  class Porter
   end
 end
 #=> true
+
+Busted.class_cache_invalidations do
+  class Veggie
+  end
+end
+#=> 2
 ```
 
 *No Cache Busted*
@@ -55,6 +78,11 @@ Busted.cache? do
   beer = "beer"
 end
 #=> false
+
+Busted.cache_invalidations do
+  pizza = "pizza"
+end
+#=> {:method=>0, :constant=>0, :class=>0}
 ```
 
 ## Installation
