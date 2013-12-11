@@ -23,11 +23,11 @@ Busted.cache? do
 end
 #=> true
 
-Busted.cache_invalidations do
+Busted.run do
   class Pizza
   end
 end
-#=> {:method=>0, :constant=>1}
+#=> {:invalidations=>{:method=>0, :constant=>1}}
 ```
 
 *Method Cache*
@@ -68,10 +68,10 @@ Busted.cache? do
 end
 #=> false
 
-Busted.cache_invalidations do
+Busted.run do
   pizza = "pizza"
 end
-#=> {:method=>0, :constant=>0}
+#=> {:invalidations=>{:method=>0, :constant=>0}}
 ```
 
 ## Installation
