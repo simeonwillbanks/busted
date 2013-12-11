@@ -1,9 +1,16 @@
 require "test_helper"
 
 class BustedTest < MiniTest::Unit::TestCase
+  def test_invalid_profiler_exception
+    error = assert_raises ArgumentError do
+      Busted.run :pizza
+    end
+    assert_equal "profiler `pizza' does not exist", error.message
+  end
+
   def test_cache_invalidations_requires_block
     assert_raises LocalJumpError do
-      Busted.cache_invalidations
+      Busted.run
     end
   end
 
@@ -20,9 +27,9 @@ class BustedTest < MiniTest::Unit::TestCase
   end
 
   def test_cache_invalidations_with_empty_block
-    invalidations = Busted.cache_invalidations { }
-    assert_equal 0, invalidations[:method]
-    assert_equal 0, invalidations[:constant]
+    report = Busted.run { }
+    assert_equal 0, report[:invalidations][:method]
+    assert_equal 0, report[:invalidations][:constant]
   end
 
   def test_method_cache_invalidations_with_empty_block
@@ -34,9 +41,9 @@ class BustedTest < MiniTest::Unit::TestCase
   end
 
   def test_cache_invalidations_with_addition
-    invalidations = Busted.cache_invalidations { 1 + 1 }
-    assert_equal 0, invalidations[:method]
-    assert_equal 0, invalidations[:constant]
+    report = Busted.run { 1 + 1 }
+    assert_equal 0, report[:invalidations][:method]
+    assert_equal 0, report[:invalidations][:constant]
   end
 
   def test_method_cache_invalidations_with_addition
@@ -48,11 +55,9 @@ class BustedTest < MiniTest::Unit::TestCase
   end
 
   def test_cache_invalidations_with_new_constant
-    invalidations = Busted.cache_invalidations do
-      self.class.const_set :"CHEESE", "cheese"
-    end
-    assert_equal 0, invalidations[:method]
-    assert invalidations[:constant] > 0
+    report = Busted.run { self.class.const_set :"CHEESE", "cheese" }
+    assert_equal 0, report[:invalidations][:method]
+    assert report[:invalidations][:constant] > 0
   end
 
   def test_method_cache_invalidations_with_new_constant
@@ -70,11 +75,9 @@ class BustedTest < MiniTest::Unit::TestCase
   end
 
   def test_cache_invalidations_with_new_method
-    invalidations = Busted.cache_invalidations do
-      Object.class_exec { def cheese; end }
-    end
-    assert invalidations[:method] > 0
-    assert_equal 0, invalidations[:constant]
+    report = Busted.run { Object.class_exec { def cheese; end } }
+    assert report[:invalidations][:method] > 0
+    assert_equal 0, report[:invalidations][:constant]
   end
 
   def test_method_cache_invalidations_with_new_method
@@ -92,11 +95,9 @@ class BustedTest < MiniTest::Unit::TestCase
   end
 
   def test_cache_invalidations_with_new_class
-    invalidations = Busted.cache_invalidations do
-      Object.class_eval "class ThreeCheese; end"
-    end
-    assert_equal 0, invalidations[:method]
-    assert_equal 1, invalidations[:constant]
+    report = Busted.run { Object.class_eval "class ThreeCheese; end" }
+    assert_equal 0, report[:invalidations][:method]
+    assert_equal 1, report[:invalidations][:constant]
   end
 
   def test_method_cache_invalidations_with_new_class

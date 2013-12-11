@@ -1,31 +1,26 @@
 require "busted/version"
+require "busted/profiler"
 
 module Busted
   extend self
 
-  def cache_invalidations(&blk)
-    starting = counts
-    yield
-    ending = counts
-
-    [:method, :constant].each_with_object({}) do |counter, result|
-      result[counter] = ending[counter] - starting[counter]
-    end
+  def run(*args, &blk)
+    Busted::Profiler.run(*args, &blk)
   end
 
   def method_cache_invalidations(&blk)
-    cache_invalidations(&blk)[:method]
+    run(&blk)[:invalidations][:method]
   end
 
   def constant_cache_invalidations(&blk)
-    cache_invalidations(&blk)[:constant]
+    run(&blk)[:invalidations][:constant]
   end
 
   def cache?(counter = nil, &blk)
     total = if counter
               send :"#{counter}_cache_invalidations", &blk
             else
-              cache_invalidations(&blk).values.inject :+
+              run(&blk)[:invalidations].values.inject :+
             end
     total > 0
   end
@@ -36,15 +31,5 @@ module Busted
 
   def constant_cache?(&blk)
     cache? :constant, &blk
-  end
-
-  private
-
-  def counts
-    stat = RubyVM.stat
-    {
-      method:   stat[:global_method_state],
-      constant: stat[:global_constant_state]
-    }
   end
 end
