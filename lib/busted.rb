@@ -5,7 +5,7 @@ module Busted
   extend self
 
   def run(*args, &blk)
-    Busted::Profiler.run(*args, &blk)
+    Busted::Profiler.run *args, &blk
   end
 
   def method_cache_invalidations(&blk)

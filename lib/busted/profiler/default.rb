@@ -10,7 +10,7 @@ module Busted
 
         report = { invalidations: {} }
 
-        [:method, :constant].each_with_object(report) do |counter, result|
+        [:method, :constant].each_with_object report do |counter, result|
           result[:invalidations][counter] = ending[counter] - starting[counter]
         end
       end

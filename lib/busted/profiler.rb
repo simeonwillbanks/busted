@@ -5,7 +5,7 @@ module Busted
     extend self
 
     def run(*args, &blk)
-      klass(args.first).run(&blk)
+      klass(args.first).run &blk
     end
 
     private
