@@ -19,8 +19,9 @@ Gem::Specification.new do |spec|
   spec.files         = [".ruby-version", "CONTRIBUTING.md", "Gemfile",
                         "LICENSE.txt", "README.md", "Rakefile",
                         "busted.gemspec", "lib/busted.rb",
-                        "lib/busted/version.rb", "test/busted_test.rb",
-                        "test/test_helper.rb"]
+                        "lib/busted/version.rb", "lib/busted/profiler.rb",
+                        "lib/busted/profiler/default.rb",
+                        "test/busted_test.rb", "test/test_helper.rb"]
   spec.test_files    = spec.files.grep(%r{^test/})
   spec.require_paths = ["lib"]
 
