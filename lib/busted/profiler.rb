@@ -11,13 +11,9 @@ module Busted
     private
 
     def klass(profiler)
-      Busted::Profiler.const_get name(profiler)
+      Busted::Profiler.const_get (profiler || :default).capitalize
     rescue NameError
       fail ArgumentError, "profiler `#{profiler}' does not exist"
-    end
-
-    def name(profiler)
-      (profiler || :default).to_s.tap { |s| s[0] = s[0].upcase }
     end
   end
 end
