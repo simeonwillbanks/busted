@@ -1,7 +1,11 @@
 # Busted  [![Build Status](https://travis-ci.org/simeonwillbanks/busted.png?branch=master)](https://travis-ci.org/simeonwillbanks/busted)
-**NOTE:** Build failing because `ruby-head` image last built before `RubyVM.stat` committed.
 
-***Requires MRI Ruby 2.1.0dev***
+#### Disclaimers
+- API in flux
+- Requires MRI Ruby 2.1.0dev at [trunk](https://github.com/ruby/ruby/tree/trunk)
+- Build failing because rvm `ruby-head` image [last built](https://travis-ci.org/simeonwillbanks/busted#L53) before `RubyVM.stat` committed
+
+--
 
 Find code that busts the Ruby cache.
 
@@ -23,7 +27,7 @@ Busted.cache_invalidations do
   class Pizza
   end
 end
-#=> {:method=>0, :constant=>1, :class=>2}
+#=> {:method=>0, :constant=>1}
 ```
 
 *Method Cache*
@@ -56,22 +60,6 @@ end
 #=> 1
 ```
 
-*Class Cache*
-
-```ruby
-Busted.class_cache? do
-  class Porter
-  end
-end
-#=> true
-
-Busted.class_cache_invalidations do
-  class Veggie
-  end
-end
-#=> 2
-```
-
 *No Cache Busted*
 
 ```ruby
@@ -83,7 +71,7 @@ end
 Busted.cache_invalidations do
   pizza = "pizza"
 end
-#=> {:method=>0, :constant=>0, :class=>0}
+#=> {:method=>0, :constant=>0}
 ```
 
 ## Installation
