@@ -3,7 +3,7 @@ require "test_helper"
 class BustedTest < MiniTest::Unit::TestCase
   def test_invalid_profiler_exception
     error = assert_raises ArgumentError do
-      Busted.run :pizza
+      Busted.run profiler: :pizza
     end
     assert_equal "profiler `pizza' does not exist", error.message
   end
@@ -57,7 +57,7 @@ class BustedTest < MiniTest::Unit::TestCase
   def test_cache_invalidations_with_new_constant
     report = Busted.run { self.class.const_set :"CHEESE", "cheese" }
     assert_equal 0, report[:invalidations][:method]
-    assert report[:invalidations][:constant] > 0
+    assert_equal 1, report[:invalidations][:constant]
   end
 
   def test_method_cache_invalidations_with_new_constant
@@ -76,7 +76,7 @@ class BustedTest < MiniTest::Unit::TestCase
 
   def test_cache_invalidations_with_new_method
     report = Busted.run { Object.class_exec { def cheese; end } }
-    assert report[:invalidations][:method] > 0
+    assert_equal 1, report[:invalidations][:method]
     assert_equal 0, report[:invalidations][:constant]
   end
 
@@ -84,7 +84,7 @@ class BustedTest < MiniTest::Unit::TestCase
     invalidations = Busted.method_cache_invalidations do
       Object.class_exec { def hawaiian; end }
     end
-    assert invalidations > 0
+    assert_equal 1, invalidations
   end
 
   def test_constant_cache_invalidations_with_new_method
@@ -190,5 +190,35 @@ class BustedTest < MiniTest::Unit::TestCase
 
   def test_constant_cache_predicate_with_new_class
     assert Busted.constant_cache? { Object.class_eval "class SantasLittleHelper; end" }
+  end
+
+  if Busted::Tracer.exists? && Busted::CurrentProcess.privileged?
+
+    def test_cache_invalidations_and_traces_with_new_method
+      report = Busted.run(trace: true) { Object.class_exec { def cookie; end } }
+      assert_equal 1, report[:invalidations][:method]
+      assert_equal 0, report[:invalidations][:constant]
+      assert_equal "global", report[:traces][0][:class]
+      assert_match /test\/busted_test.rb\z/, report[:traces][0][:sourcefile]
+      assert_equal "198", report[:traces][0][:lineno]
+    end
+  end
+
+  def test_trace_without_root_privileges
+    Busted::CurrentProcess.stub :privileged?, false do
+      error = assert_raises Errno::EPERM do
+        Busted.run(trace: true) { Object.class_exec { def ice_cream; end } }
+      end
+      assert_equal "Operation not permitted - dtrace requires root privileges", error.message
+    end
+  end
+
+  def test_trace_without_dtrace_installed
+    Busted::Tracer.stub :exists?, false do
+      error = assert_raises Busted::Tracer::MissingCommandError do
+        Busted.run(trace: true) { Object.class_exec { def pie; end } }
+      end
+      assert_equal "tracer requires dtrace", error.message
+    end
   end
 end

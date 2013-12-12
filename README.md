@@ -74,6 +74,18 @@ end
 #=> {:invalidations=>{:method=>0, :constant=>0}}
 ```
 
+## Advanced Usage
+Busted can report method cache invalidation locations via [`dtrace`](http://en.wikipedia.org/wiki/DTrace). The running process must have root privileges, and `dtrace` must be installed.
+
+```ruby
+Busted.run trace: true do
+  def cookie; end
+end
+#=> {:invalidations=>{:method=>1, :constant=>0}, :traces=>[{:class=>"global", :sourcefile=>"(irb)", :lineno=>"48"}]}
+```
+
+Busted includes an [example `dtrace` probe](/dtrace/probes/examples/method-cache-clear.d) for use on the command line or an application.  See the [probe](/dtrace/probes/examples/method-cache-clear.d) for usage.
+
 ## Installation
 
 ***Requires MRI Ruby 2.1.0dev***
