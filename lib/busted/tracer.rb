@@ -28,10 +28,10 @@ module Busted
     end
 
     def report
-      lines.split("\n").each_with_object([]) do |line, result|
+      lines.split("\n").each_with_object({method: []}) do |line, result|
         next if line =~ /\ABusted/
         trace = line.split
-        result << { class: trace[0], sourcefile: trace[1], lineno: trace[2] }
+        result[:method] << { class: trace[0], sourcefile: trace[1], lineno: trace[2] }
       end
     end
 

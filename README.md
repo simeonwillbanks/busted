@@ -77,11 +77,32 @@ end
 ## Advanced Usage
 Busted can report method cache invalidation locations via [`dtrace`](http://en.wikipedia.org/wiki/DTrace). The running process must have root privileges, and `dtrace` must be installed.
 
+*trace.rb*
 ```ruby
-Busted.run trace: true do
+require "busted"
+require "pp"
+
+report = Busted.run(trace: true) do
   def cookie; end
 end
-#=> {:invalidations=>{:method=>1, :constant=>0}, :traces=>[{:class=>"global", :sourcefile=>"(irb)", :lineno=>"48"}]}
+pp report
+```
+
+```bash
+$ whoami
+simeon
+
+$ id simeon
+uid=501(simeon) gid=20(staff) groups=20(staff),80(admin)
+
+$ sudo grep admin /etc/sudoers
+%admin	ALL=(ALL) NOPASSWD: ALL
+
+# simeon is an admin; sudo does not require a password
+$ ruby trace.rb
+{:invalidations=>{:method=>1, :constant=>0},
+ :traces=>
+  {:method=>[{:class=>"global", :sourcefile=>"trace.rb", :lineno=>"5"}]}}
 ```
 
 Busted includes an [example `dtrace` probe](/dtrace/probes/examples/method-cache-clear.d) for use on the command line or an application.  See the [probe](/dtrace/probes/examples/method-cache-clear.d) for usage.

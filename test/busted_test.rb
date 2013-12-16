@@ -198,9 +198,9 @@ class BustedTest < MiniTest::Unit::TestCase
       report = Busted.run(trace: true) { Object.class_exec { def cookie; end } }
       assert_equal 1, report[:invalidations][:method]
       assert_equal 0, report[:invalidations][:constant]
-      assert_equal "global", report[:traces][0][:class]
-      assert_match /test\/busted_test.rb\z/, report[:traces][0][:sourcefile]
-      assert_equal "198", report[:traces][0][:lineno]
+      assert_equal "global", report[:traces][:method][0][:class]
+      assert_match /test\/busted_test.rb\z/, report[:traces][:method][0][:sourcefile]
+      assert_equal "198", report[:traces][:method][0][:lineno]
     end
   end
 
