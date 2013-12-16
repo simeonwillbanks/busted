@@ -95,10 +95,15 @@ simeon
 $ id simeon
 uid=501(simeon) gid=20(staff) groups=20(staff),80(admin)
 
+# simeon is an admin; sudo does not require a password
 $ sudo grep admin /etc/sudoers
 %admin	ALL=(ALL) NOPASSWD: ALL
 
-# simeon is an admin; sudo does not require a password
+$ sudo dtrace -V
+dtrace: Sun D 1.6.2
+
+# No need to sudo
+# Busted runs dtrace in a child process with root privileges
 $ ruby trace.rb
 {:invalidations=>{:method=>1, :constant=>0},
  :traces=>
