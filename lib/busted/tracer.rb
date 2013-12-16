@@ -38,7 +38,7 @@ module Busted
     private
 
     attr_accessor :lines
-    attr_reader :pid
+    attr_reader :child_pid
 
     def wait
       sleep 0.1
@@ -58,11 +58,11 @@ module Busted
     end
 
     def spawn
-      @pid = Process.spawn command, STDERR => STDOUT
+      @child_pid = Process.spawn command, STDERR => STDOUT
     end
 
     def kill
-      `sudo kill -TERM #{pid}`
+      `sudo kill -TERM #{child_pid}`
     end
 
     def parent_pid
