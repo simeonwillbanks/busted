@@ -41,7 +41,7 @@ Busted.method_cache_invalidations do
   def pizza
   end
 end
-#=> 3
+#=> 1
 ```
 
 *Constant Cache*
