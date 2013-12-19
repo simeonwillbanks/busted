@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
 
   spec.files         = %w(
     .ruby-version
-    .travis.yml
     CONTRIBUTING.md
     Gemfile
     LICENSE.txt
