@@ -20,7 +20,7 @@ To run a specific test file:
 
 To run a specific test:
 
-  `$ bundle exec ruby -Itest test/busted_test.rb -n test_cache_with_new_constant`
+  `$ bundle exec ruby -Itest test/busted_test.rb -n test_cache_invalidations_with_new_constant`
 
 [issues]: https://github.com/simeonwillbanks/busted/issues
 [pr]: https://help.github.com/articles/using-pull-requests
