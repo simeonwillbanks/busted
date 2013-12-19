@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Busted::VERSION
   spec.authors       = ["Simeon F. Willbanks"]
   spec.email         = ["sfw@simeonfosterwillbanks.com"]
-  spec.description   = "Find code that busts the Ruby cache."
+  spec.description   = "Find code that busts the Ruby 2.1+ cache."
   spec.summary       = <<-DESC
     MRI Ruby defines RubyVM.stat which accesses internal cache counters.
     When the cache counters are incremented, the internal cache is invalidated.
