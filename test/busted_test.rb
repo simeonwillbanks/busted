@@ -205,22 +205,22 @@ class BustedTest < MiniTest::Unit::TestCase
   end
 
   def test_trace_without_root_privileges
-    Busted::CurrentProcess.stub :privileged?, false do
-      error = assert_raises Errno::EPERM do
-        Busted.run(trace: true) { Object.class_exec { def ice_cream; end } }
+    Busted::Tracer.stub :exists?, true do
+      Busted::CurrentProcess.stub :privileged?, false do
+        error = assert_raises Errno::EPERM do
+          Busted.run(trace: true) { Object.class_exec { def ice_cream; end } }
+        end
+        assert_equal "Operation not permitted - dtrace requires root privileges", error.message
       end
-      assert_equal "Operation not permitted - dtrace requires root privileges", error.message
     end
   end
 
   def test_trace_without_dtrace_installed
     Busted::Tracer.stub :exists?, false do
-      Busted::CurrentProcess.stub :privileged?, false do
-        error = assert_raises Busted::Tracer::MissingCommandError do
-          Busted.run(trace: true) { Object.class_exec { def pie; end } }
-        end
-        assert_equal "tracer requires dtrace", error.message
+      error = assert_raises Busted::Tracer::MissingCommandError do
+        Busted.run(trace: true) { Object.class_exec { def pie; end } }
       end
+      assert_equal "tracer requires dtrace", error.message
     end
   end
 end
