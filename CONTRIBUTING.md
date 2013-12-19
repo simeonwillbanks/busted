@@ -8,6 +8,8 @@ welcome.
 
 ## Running the Tests
 
+**Process must have root privileges, and [`dtrace`](http://en.wikipedia.org/wiki/DTrace) must be installed.**
+
 To run the full suite:
 
   `$ bundle exec rake`
