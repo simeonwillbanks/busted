@@ -1,35 +1,34 @@
-require "busted/version"
 require "busted/profiler"
 
 module Busted
   extend self
 
-  def run(*args, &blk)
-    Busted::Profiler.run *args, &blk
+  def run(options = {}, &block)
+    Profiler.run options, &block
   end
 
-  def method_cache_invalidations(&blk)
-    run(&blk)[:invalidations][:method]
+  def method_cache_invalidations(&block)
+    run(&block)[:invalidations][:method]
   end
 
-  def constant_cache_invalidations(&blk)
-    run(&blk)[:invalidations][:constant]
+  def constant_cache_invalidations(&block)
+    run(&block)[:invalidations][:constant]
   end
 
-  def cache?(counter = nil, &blk)
+  def cache?(counter = nil, &block)
     total = if counter
-              send :"#{counter}_cache_invalidations", &blk
+              send :"#{counter}_cache_invalidations", &block
             else
-              run(&blk)[:invalidations].values.inject :+
+              run(&block)[:invalidations].values.inject :+
             end
     total > 0
   end
 
-  def method_cache?(&blk)
-    cache? :method, &blk
+  def method_cache?(&block)
+    cache? :method, &block
   end
 
-  def constant_cache?(&blk)
-    cache? :constant, &blk
+  def constant_cache?(&block)
+    cache? :constant, &block
   end
 end

@@ -1,28 +1,30 @@
 module Busted
   module Profiler
-    module Default
-      extend self
+    class Default
 
-      def run(&blk)
-        starting = counts
-        yield
-        ending = counts
+      include Busted::Traceable
+      include Busted::Countable
 
-        report = { invalidations: {} }
+      attr_reader :trace, :block, :report
 
-        [:method, :constant].each_with_object report do |counter, result|
-          result[:invalidations][counter] = ending[counter] - starting[counter]
-        end
+      def initialize(options = {}, &block)
+        fail LocalJumpError, "no block given" unless block
+
+        @trace = options.fetch :trace, false
+        @block = block
+        @report = {}
       end
 
-      private
+      def run
+        start_tracer
+        start_counter
 
-      def counts
-        stat = RubyVM.stat
-        {
-          method:   stat[:global_method_state],
-          constant: stat[:global_constant_state]
-        }
+        block.call
+
+        finish_counter
+        finish_tracer
+
+        report
       end
     end
   end
