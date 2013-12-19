@@ -1,13 +1,11 @@
 # Busted  [![Build Status](https://travis-ci.org/simeonwillbanks/busted.png?branch=master)](https://travis-ci.org/simeonwillbanks/busted)
 
 #### Disclaimers
-- API in flux
 - Requires MRI Ruby 2.1.0dev at [trunk](https://github.com/ruby/ruby/tree/trunk)
-- Build failing because rvm `ruby-head` image [last built](https://travis-ci.org/simeonwillbanks/busted#L53) before `RubyVM.stat` committed
 
 --
 
-Find code that busts the Ruby cache.
+Find code that busts the Ruby 2.1+ cache.
 
 - Report when code invalidates Ruby's internal cache
 - Uses [RubyVM.stat](https://github.com/ruby/ruby/commit/cc1063092b366a0a8449528ab6bf67a72f5ce027)
