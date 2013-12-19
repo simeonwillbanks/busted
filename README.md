@@ -1,4 +1,4 @@
-# Busted  [![Build Status](https://travis-ci.org/simeonwillbanks/busted.png?branch=master)](https://travis-ci.org/simeonwillbanks/busted)
+# Busted  [![Build Status](https://travis-ci.org/simeonwillbanks/busted.png?branch=master)](https://travis-ci.org/simeonwillbanks/busted) [![Code Climate](https://codeclimate.com/github/simeonwillbanks/busted.png)](https://codeclimate.com/github/simeonwillbanks/busted)
 
 #### Disclaimers
 - Requires MRI Ruby 2.1.0dev at [trunk](https://github.com/ruby/ruby/tree/trunk)
