@@ -215,10 +215,12 @@ class BustedTest < MiniTest::Unit::TestCase
 
   def test_trace_without_dtrace_installed
     Busted::Tracer.stub :exists?, false do
-      error = assert_raises Busted::Tracer::MissingCommandError do
-        Busted.run(trace: true) { Object.class_exec { def pie; end } }
+      Busted::CurrentProcess.stub :privileged?, false do
+        error = assert_raises Busted::Tracer::MissingCommandError do
+          Busted.run(trace: true) { Object.class_exec { def pie; end } }
+        end
+        assert_equal "tracer requires dtrace", error.message
       end
-      assert_equal "tracer requires dtrace", error.message
     end
   end
 end
