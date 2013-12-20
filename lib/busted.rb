@@ -7,6 +7,14 @@ module Busted
     Profiler.run options, &block
   end
 
+  def start(options = {})
+    Profiler.run({ profiler: :sandwich, action: :start }.merge options)
+  end
+
+  def finish(options = {})
+    Profiler.run({ profiler: :sandwich, action: :finish }.merge options)
+  end
+
   def method_cache_invalidations(&block)
     run(&block)[:invalidations][:method]
   end
