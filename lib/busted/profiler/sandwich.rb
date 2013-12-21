@@ -29,10 +29,6 @@ module Busted
         sandwich.run
       end
 
-      def initialize
-        @report = {}
-      end
-
       def run
         send action
       end
@@ -48,6 +44,7 @@ module Busted
       end
 
       def start
+        @report = {}
         start_tracer
         start_counter
       end
