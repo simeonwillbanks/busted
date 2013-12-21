@@ -7,6 +7,10 @@ module Busted
 
       attr_reader :trace, :block, :report
 
+      def self.run(options = {}, &block)
+        new(options, &block).run
+      end
+
       def initialize(options = {}, &block)
         fail LocalJumpError, "no block given" unless block
 

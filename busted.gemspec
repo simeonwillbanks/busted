@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
     lib/busted/current_process.rb
     lib/busted/profiler.rb
     lib/busted/profiler/default.rb
+    lib/busted/profiler/sandwich.rb
     lib/busted/traceable.rb
     lib/busted/tracer.rb
     lib/busted/version.rb

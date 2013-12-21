@@ -8,6 +8,13 @@ class BustedTest < MiniTest::Unit::TestCase
     assert_equal "profiler `pizza' does not exist", error.message
   end
 
+  def test_invalid_profiler_action_exception
+    error = assert_raises ArgumentError do
+      Busted.start profiler: :sandwich, action: :pizza
+    end
+    assert_equal "profiler requires start or finish action", error.message
+  end
+
   def test_cache_invalidations_requires_block
     assert_raises LocalJumpError do
       Busted.run
@@ -54,6 +61,14 @@ class BustedTest < MiniTest::Unit::TestCase
     assert_equal 0, Busted.constant_cache_invalidations { 1 + 1 }
   end
 
+  def test_start_finish_with_addition
+    Busted.start
+    1 + 1
+    report = Busted.finish
+    assert_equal 0, report[:invalidations][:method]
+    assert_equal 0, report[:invalidations][:constant]
+  end
+
   def test_cache_invalidations_with_new_constant
     report = Busted.run { self.class.const_set :"CHEESE", "cheese" }
     assert_equal 0, report[:invalidations][:method]
@@ -72,6 +87,14 @@ class BustedTest < MiniTest::Unit::TestCase
       self.class.const_set :"VEGETABLE", "vegetable"
     end
     assert_equal 1, invalidations
+  end
+
+  def test_start_finish_with_new_constant
+    Busted.start
+    self.class.const_set :"PEPPERONI", "pepperoni"
+    report = Busted.finish
+    assert_equal 0, report[:invalidations][:method]
+    assert_equal 1, report[:invalidations][:constant]
   end
 
   def test_cache_invalidations_with_new_method
@@ -94,6 +117,14 @@ class BustedTest < MiniTest::Unit::TestCase
     assert_equal 0, invalidations
   end
 
+  def test_start_finish_with_new_method
+    Busted.start
+    Object.class_exec { def pepperoni; end }
+    report = Busted.finish
+    assert_equal 1, report[:invalidations][:method]
+    assert_equal 0, report[:invalidations][:constant]
+  end
+
   def test_cache_invalidations_with_new_class
     report = Busted.run { Object.class_eval "class ThreeCheese; end" }
     assert_equal 0, report[:invalidations][:method]
@@ -112,6 +143,14 @@ class BustedTest < MiniTest::Unit::TestCase
       Object.class_eval "class Veggie; end"
     end
     assert_equal 1, invalidations
+  end
+
+  def test_start_finish_with_new_class
+    Busted.start
+    Object.class_eval "class Pepperoni; end"
+    report = Busted.finish
+    assert_equal 0, report[:invalidations][:method]
+    assert_equal 1, report[:invalidations][:constant]
   end
 
   def test_cache_predicate_requires_block
@@ -200,7 +239,18 @@ class BustedTest < MiniTest::Unit::TestCase
       assert_equal 0, report[:invalidations][:constant]
       assert_equal "global", report[:traces][:method][0][:class]
       assert_match /test\/busted_test.rb\z/, report[:traces][:method][0][:sourcefile]
-      assert_equal "198", report[:traces][:method][0][:lineno]
+      assert_equal "237", report[:traces][:method][0][:lineno]
+    end
+
+    def test_start_finish_and_traces_with_new_method
+      Busted.start trace: true
+      Object.class_exec { def candy; end }
+      report = Busted.finish
+      assert_equal 1, report[:invalidations][:method]
+      assert_equal 0, report[:invalidations][:constant]
+      assert_equal "global", report[:traces][:method][0][:class]
+      assert_match /test\/busted_test.rb\z/, report[:traces][:method][0][:sourcefile]
+      assert_equal "247", report[:traces][:method][0][:lineno]
     end
   end
 

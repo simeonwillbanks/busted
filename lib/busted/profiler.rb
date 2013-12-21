@@ -2,14 +2,16 @@ require "busted/counter"
 require "busted/countable"
 require "busted/tracer"
 require "busted/traceable"
-require "busted/profiler/default"
 
 module Busted
   module Profiler
     extend self
 
+    autoload :Default, "busted/profiler/default"
+    autoload :Sandwich, "busted/profiler/sandwich"
+
     def run(options, &block)
-      klass(options.fetch :profiler, :default).new(options, &block).run
+      klass(options.fetch :profiler, :default).run(options, &block)
     end
 
     private

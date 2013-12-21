@@ -26,6 +26,12 @@ Busted.run do
   end
 end
 #=> {:invalidations=>{:method=>0, :constant=>1}}
+
+Busted.start
+class Pie
+end
+Busted.finish
+#=> {:invalidations=>{:method=>0, :constant=>1}}
 ```
 
 *Method Cache*
@@ -42,6 +48,18 @@ Busted.method_cache_invalidations do
   end
 end
 #=> 1
+
+Busted.run do
+  def pie
+  end
+end
+#=> {:invalidations=>{:method=>1, :constant=>0}}
+
+Busted.start
+def smoothie
+end
+Busted.finish
+#=> {:invalidations=>{:method=>1, :constant=>0}}
 ```
 
 *Constant Cache*
@@ -56,6 +74,16 @@ Busted.constant_cache_invalidations do
   CHEESE = "cheese"
 end
 #=> 1
+
+Busted.run do
+  PIE = "pumpkin"
+end
+#=> {:invalidations=>{:method=>0, :constant=>1}}
+
+Busted.start
+SMOOTHIE = "blueberry"
+Busted.finish
+#=> {:invalidations=>{:method=>0, :constant=>1}}
 ```
 
 *No Cache Busted*
@@ -70,6 +98,11 @@ Busted.run do
   pizza = "pizza"
 end
 #=> {:invalidations=>{:method=>0, :constant=>0}}
+
+Busted.start
+pie = "pie"
+Busted.finish
+#=> {:invalidations=>{:method=>0, :constant=>0}}
 ```
 
 ## Advanced Usage
@@ -81,7 +114,8 @@ require "busted"
 require "pp"
 
 report = Busted.run(trace: true) do
-  def cookie; end
+  def cookie
+  end
 end
 pp report
 ```
@@ -106,6 +140,25 @@ $ ruby trace.rb
 {:invalidations=>{:method=>1, :constant=>0},
  :traces=>
   {:method=>[{:class=>"global", :sourcefile=>"trace.rb", :lineno=>"5"}]}}
+```
+
+*start_finish_trace.rb*
+```ruby
+require "busted"
+require "pp"
+
+Busted.start trace: true
+def ice_cream
+end
+pp Busted.finish
+```
+
+```bash
+$ ruby start_finish_trace.rb
+{:invalidations=>{:method=>1, :constant=>0},
+ :traces=>
+  {:method=>
+    [{:class=>"global", :sourcefile=>"start_finish_trace.rb", :lineno=>"5"}]}}
 ```
 
 Busted includes an [example `dtrace` probe](/dtrace/probes/examples/method-cache-clear.d) for use on the command line or an application.  See the [probe](/dtrace/probes/examples/method-cache-clear.d) for usage.
