@@ -15,7 +15,7 @@
  *
  * Documentation:
  *
- * https://github.com/ruby/ruby/blob/trunk/doc/dtrace_probes.rdoc
+ * http://ruby-doc.org/core-2.1.0/doc/dtrace_probes_rdoc.html
  */
 ruby$target:::method-cache-clear
 /arg1/
