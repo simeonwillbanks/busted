@@ -1,16 +1,14 @@
 # Busted  [![Build Status](https://travis-ci.org/simeonwillbanks/busted.png?branch=master)](https://travis-ci.org/simeonwillbanks/busted) [![Code Climate](https://codeclimate.com/github/simeonwillbanks/busted.png)](https://codeclimate.com/github/simeonwillbanks/busted)
 
-#### Disclaimers
-- Requires MRI Ruby 2.1.0dev at [trunk](https://github.com/ruby/ruby/tree/trunk)
+### Find code that busts the Ruby 2.1+ cache.
 
---
+**Busted** reports when code invalidates Ruby's internal cache.
 
-Find code that busts the Ruby 2.1+ cache.
+- [Basic Usage](#basic-usage) reports cache invalidations
+- [Advanced Usage](#advanced-usage) details exact invalidation locations via [`dtrace`](http://en.wikipedia.org/wiki/DTrace)
+- **Busted** relies upon [RubyVM.stat](http://ruby-doc.org/core-2.1.0/RubyVM.html#method-c-stat) and the [ruby:::method-cache-clear](http://ruby-doc.org/core-2.1.0/doc/dtrace_probes_rdoc.html) `dtrace` probe
 
-- Report when code invalidates Ruby's internal cache
-- Uses [RubyVM.stat](https://github.com/ruby/ruby/commit/cc1063092b366a0a8449528ab6bf67a72f5ce027)
-
-## Usage
+## Basic Usage
 
 *Any Cache*
 
@@ -106,7 +104,7 @@ Busted.finish
 ```
 
 ## Advanced Usage
-Busted can report method cache invalidation locations via [`dtrace`](http://en.wikipedia.org/wiki/DTrace). The running process must have root privileges, and `dtrace` must be installed.
+**Busted** can report method cache invalidation locations via [`dtrace`](http://en.wikipedia.org/wiki/DTrace). The running process must have root privileges, and `dtrace` must be installed.
 
 *trace.rb*
 ```ruby
@@ -161,11 +159,11 @@ $ ruby start_finish_trace.rb
     [{:class=>"global", :sourcefile=>"start_finish_trace.rb", :lineno=>"5"}]}}
 ```
 
-Busted includes an [example `dtrace` probe](/dtrace/probes/examples/method-cache-clear.d) for use on the command line or an application.  See the [probe](/dtrace/probes/examples/method-cache-clear.d) for usage.
+**Busted** includes an [example `dtrace` probe](/dtrace/probes/examples/method-cache-clear.d) for use on the command line or an application.  See the [probe](/dtrace/probes/examples/method-cache-clear.d) for usage.
 
 ## Installation
 
-***Requires MRI Ruby 2.1.0dev***
+***Requires MRI Ruby 2.1+***
 
 Add this line to your application's Gemfile:
 
