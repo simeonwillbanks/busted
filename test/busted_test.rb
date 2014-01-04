@@ -262,12 +262,10 @@ class BustedTest < MiniTest::Unit::TestCase
     Object.class_eval "class ExtraExtraCheese; end"
 
     inner_report = Busted.finish
-    puts inner_report.object_id
 
     Object.class_eval "class TooMuchCheese; end"
 
     outer_report = Busted.finish
-    puts outer_report.object_id
 
     assert_equal({invalidations:{method:0,constant:1}}, inner_report)
     assert_equal({invalidations:{method:0,constant:3}}, outer_report)
