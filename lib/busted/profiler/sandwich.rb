@@ -52,7 +52,7 @@ module Busted
       def finish
         finish_counter
         finish_tracer
-        report
+        report.dup
       end
     end
   end

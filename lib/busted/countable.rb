@@ -5,7 +5,7 @@ module Busted
     attr_writer :report
 
     def start_counter
-      @counter = Counter.new
+      @counter ||= Counter.new
 
       counter.start
     end

@@ -1,15 +1,24 @@
+require "busted/stack"
+
 module Busted
   class Counter
 
+    def initialize(stack = Stack.new)
+      @stack = stack
+    end
+
     def start
-      @started = counts
+      stack.started = counts
     end
 
     def finish
-      @finished = counts
+      stack.finished = counts
     end
 
     def report
+      started = stack.started
+      finished = stack.finished
+
       [:method, :constant].each_with_object({}) do |counter, result|
         result[counter] = finished[counter] - started[counter]
       end
@@ -17,7 +26,7 @@ module Busted
 
     private
 
-    attr_reader :started, :finished
+    attr_reader :stack
 
     def counts
       stat = RubyVM.stat

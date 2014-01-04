@@ -34,10 +34,12 @@ Gem::Specification.new do |spec|
     lib/busted/profiler.rb
     lib/busted/profiler/default.rb
     lib/busted/profiler/sandwich.rb
+    lib/busted/stack.rb
     lib/busted/traceable.rb
     lib/busted/tracer.rb
     lib/busted/version.rb
     test/busted/current_process_test.rb
+    test/busted/stack_test.rb
     test/busted_test.rb
     test/test_helper.rb
   )
