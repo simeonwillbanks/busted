@@ -231,6 +231,48 @@ class BustedTest < MiniTest::Unit::TestCase
     assert Busted.constant_cache? { Object.class_eval "class SantasLittleHelper; end" }
   end
 
+  def test_nesting_run
+    outer_report = {}
+    inner_report = {}
+
+    outer_report = Busted.run do
+
+      Object.class_eval "class CarlsbadChronic; end"
+
+      inner_report = Busted.run do
+
+        Object.class_eval "class SharkBite; end"
+      end
+    end
+
+    assert_equal({invalidations:{method:0,constant:1}}, inner_report)
+    assert_equal({invalidations:{method:0,constant:2}}, outer_report)
+  end
+
+  def test_nesting_start_finish
+    outer_report = {}
+    inner_report = {}
+
+    Busted.start
+
+    Object.class_eval "class ExtraCheese; end"
+
+    Busted.start
+
+    Object.class_eval "class ExtraExtraCheese; end"
+
+    inner_report = Busted.finish
+    puts inner_report.object_id
+
+    Object.class_eval "class TooMuchCheese; end"
+
+    outer_report = Busted.finish
+    puts outer_report.object_id
+
+    assert_equal({invalidations:{method:0,constant:1}}, inner_report)
+    assert_equal({invalidations:{method:0,constant:3}}, outer_report)
+  end
+
   if Busted::Tracer.exists? && Busted::CurrentProcess.privileged?
 
     def test_cache_invalidations_and_traces_with_new_method
@@ -239,7 +281,7 @@ class BustedTest < MiniTest::Unit::TestCase
       assert_equal 0, report[:invalidations][:constant]
       assert_equal "global", report[:traces][:method][0][:class]
       assert_match /test\/busted_test.rb\z/, report[:traces][:method][0][:sourcefile]
-      assert_equal "237", report[:traces][:method][0][:lineno]
+      assert_equal "#{__LINE__ - 5}", report[:traces][:method][0][:lineno]
     end
 
     def test_start_finish_and_traces_with_new_method
@@ -250,7 +292,7 @@ class BustedTest < MiniTest::Unit::TestCase
       assert_equal 0, report[:invalidations][:constant]
       assert_equal "global", report[:traces][:method][0][:class]
       assert_match /test\/busted_test.rb\z/, report[:traces][:method][0][:sourcefile]
-      assert_equal "247", report[:traces][:method][0][:lineno]
+      assert_equal "#{__LINE__ - 6}", report[:traces][:method][0][:lineno]
     end
   end
 
