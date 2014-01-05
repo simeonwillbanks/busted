@@ -47,6 +47,7 @@ module Busted
         @report = {}
         start_tracer
         start_counter
+        true
       end
 
       def finish

@@ -271,6 +271,11 @@ class BustedTest < MiniTest::Unit::TestCase
     assert_equal({invalidations:{method:0,constant:3}}, outer_report)
   end
 
+  def test_start_return_value
+    assert_equal true, Busted.start
+    Busted.finish
+  end
+
   if Busted::Tracer.exists? && Busted::CurrentProcess.privileged?
 
     def test_cache_invalidations_and_traces_with_new_method
