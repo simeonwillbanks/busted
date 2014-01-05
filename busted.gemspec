@@ -17,6 +17,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/simeonwillbanks/busted"
   spec.license       = "MIT"
 
+  spec.required_ruby_version = ">= 2.1.0"
+
   spec.files         = %w(
     .ruby-version
     CONTRIBUTING.md
