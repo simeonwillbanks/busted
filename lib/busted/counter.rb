@@ -1,3 +1,4 @@
+require "monitor"
 require "busted/stack"
 
 module Busted
@@ -5,28 +6,31 @@ module Busted
 
     def initialize(stack = Stack.new)
       @stack = stack
+      @lock = Monitor.new
     end
 
     def start
-      stack.started = counts
+      lock.synchronize { stack.started = counts }
     end
 
     def finish
-      stack.finished = counts
+      lock.synchronize { stack.finished = counts }
     end
 
     def report
-      started = stack.started
-      finished = stack.finished
+      lock.synchronize do
+        started = stack.started
+        finished = stack.finished
 
-      [:method, :constant].each_with_object({}) do |counter, result|
-        result[counter] = finished[counter] - started[counter]
+        [:method, :constant].each_with_object({}) do |counter, result|
+          result[counter] = finished[counter] - started[counter]
+        end
       end
     end
 
     private
 
-    attr_reader :stack
+    attr_reader :stack, :lock
 
     def counts
       stat = RubyVM.stat

@@ -1,24 +1,27 @@
+require "monitor"
+
 module Busted
   class Stack
     def initialize
       @started = []
       @finished = []
+      @lock = Monitor.new
     end
 
     def started
-      @started.pop
+      @lock.synchronize { @started.pop }
     end
 
     def started=(element)
-      @started.push element
+      @lock.synchronize { @started.push element }
     end
 
     def finished
-      @finished.pop
+      @lock.synchronize { @finished.pop }
     end
 
     def finished=(element)
-      @finished.push element
+      @lock.synchronize { @finished.push element }
     end
   end
 end
