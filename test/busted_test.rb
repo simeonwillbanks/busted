@@ -1,6 +1,6 @@
 require "test_helper"
 
-class BustedTest < MiniTest::Unit::TestCase
+class BustedTest < Minitest::Test
   def test_invalid_profiler_exception
     error = assert_raises ArgumentError do
       Busted.run profiler: :pizza

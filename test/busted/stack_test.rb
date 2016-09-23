@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Busted::StackTest < MiniTest::Unit::TestCase
+class Busted::StackTest < Minitest::Test
   def test_lifo_with_one_set_of_counts
     stack = Busted::Stack.new
     stack.started = 1

@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Busted::CurrentProcessTest < MiniTest::Unit::TestCase
+class Busted::CurrentProcessTest < Minitest::Test
 
   def test_privileged_because_root
     Process.stub :euid, 0 do
